@@ -1,0 +1,63 @@
+spring:
+  redis:
+    password: 123456
+    jedis:
+      pool:
+        max-active: 8 #最大连接数
+        max-idle: 8 #最大空闲连接数
+        max-wait: -1 #最大等待时间
+        min-idle: 0
+    cluster:
+      nodes: 47.106.146.227:6371,47.106.146.227:6372,47.106.146.227:6373,47.106.146.227:6374,47.106.146.227:6375,47.106.146.227:6376
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      db1:
+        username: root
+        password: 123456
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://47.106.146.227:3306/oauth2?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=UTF-8&allowMultiQueries=true
+        initialSize: 5
+        minIdle: 5
+        maxActive: 20
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 1 FROM DUAL
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 20
+      db2:
+        username: root
+        password: 123456
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://47.106.146.227:3306/tenant?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=UTF-8&allowMultiQueries=true
+        initialSize: 5
+        minIdle: 5
+        maxActive: 20
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 1 FROM DUAL
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 20
+
+mybatis-plus:
+  # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
+  # 如果是放在resource目录 classpath:/mapper/*Mapper.xml
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: #com.zxk.entity
+  configuration:
+    #配置返回数据库(column下划线命名&&返回java实体是驼峰命名)，自动匹配无需as（没开启这个，SQL需要写as： select user_id as userId）
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    #配置JdbcTypeForNull, oracle数据库必须配置
+    jdbc-type-for-null: 'null'
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+

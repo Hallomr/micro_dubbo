@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 日志存放路径 -->
+    <property name="log.path" value="/home/logs/example-consumer" />
+    <property name="log.pattern" value="%d %red(%p) [%t] %green((%file:%line\))---%m%n"/>
+    <!--本文主要输出日志为控制台日志，系统日志，sql日志，异常日志-->
+    <!-- %m输出的信息,%p日志级别,%t线程名,%d日期,%c类的全名,,,, -->
+    <!--控制台-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d %red(%p) %highlight([%t]) %green((%file:%line\))---%m%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--系统info级别日志-->
+    <!--<File> 日志目录，没有会自动创建-->
+    <!--<rollingPolicy>日志策略，每天创建一个日志文件，或者当天日志文件超过64MB时-->
+    <!--encoder 日志编码及输出格式-->
+    <appender name="infoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${log.path}/sys-info.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/sys-info.log.%d.%i.log</fileNamePattern>
+            <!-- or whenever the file size reaches 64 MB -->
+            <maxFileSize>100MB</maxFileSize>
+            <!-- 日志最大的历史 10天 -->
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+            <charset>UTF-8</charset>
+            <!-- 此处设置字符集 -->
+        </encoder>
+    </appender>
+
+    <!--sql日志-->
+    <!--<appender name="sqlLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${log.path}/sys-sql.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/sys-sql.log.%d.%i.log</fileNamePattern>
+            &lt;!&ndash; or whenever the file size reaches 64 MB &ndash;&gt;
+            <maxFileSize>100MB</maxFileSize>
+            &lt;!&ndash; 日志最大的历史 10天 &ndash;&gt;
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        &lt;!&ndash;对记录事件进行格式化。负责两件事，一是把日志信息转换成字节数组，二是把字节数组写入到输出流。&ndash;&gt;
+        <encoder>
+            &lt;!&ndash;用来设置日志的输入格式&ndash;&gt;
+            <pattern>${log.pattern}</pattern>
+            <charset>UTF-8</charset>
+            &lt;!&ndash; 此处设置字符集 &ndash;&gt;
+        </encoder>
+    </appender>
+-->
+
+    <!--异常日志-->
+    <appender name="errorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${log.path}/sys-error.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/sys-error.%d.log.%i.log</fileNamePattern>
+            <!-- or whenever the file size reaches 64 MB -->
+            <maxFileSize>100MB</maxFileSize>
+            <!-- 日志最大的历史 10天 -->
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <!--对记录事件进行格式化。负责两件事，一是把日志信息转换成字节数组，二是把字节数组写入到输出流。-->
+        <encoder>
+            <!--用来设置日志的输入格式-->
+            <pattern>${log.pattern}</pattern>
+            <charset>UTF-8</charset>
+            <!-- 此处设置字符集 -->
+        </encoder>
+        <!--
+            日志都在这里 过滤出 error
+            使用 try {}catch (Exception e){} 的话异常无法写入日志，可以在catch里用logger.error()方法手动写入日志
+            -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <!--  日志输出级别 -->
+    <!--All\DEBUG\INFO\WARN\ERROR\FATAL\OFF-->
+    <!--打印info级别日志，分别在控制台，infoLog，errorLog输出
+        异常日志在上面由过滤器过滤出ERROR日志打印
+    -->
+    <root level="INFO">
+        <appender-ref ref="console" />
+        <appender-ref ref="infoLog" />
+        <appender-ref ref="errorLog" />
+    </root>
+
+    <!--打印sql至sqlLog文件日志-->
+    <!--<logger name="com.springboot.demo.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="console" />
+        <appender-ref ref="sqlLog" />
+    </logger>-->
+</configuration>

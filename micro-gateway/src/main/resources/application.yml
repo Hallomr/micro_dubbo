@@ -1,0 +1,50 @@
+server:
+  port: 8880
+spring:
+  application:
+    name: micro-gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowCredentials: true
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      discovery:
+        locator:
+          #enabled: false
+          lower-case-service-id: true
+      routes:
+        - id: example-consumer
+          uri: lb://example-consumer
+          predicates:
+            - Path=/example/**
+          filters:
+            - SwaggerHeaderFilter
+#            - StripPrefix=1
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: public
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: public
+        file-extension: properties
+    sentinel:
+      filter:
+        enabled: false
+      transport:
+        dashboard: localhost:8080 #Sentinel控制台地址
+      eager: true #取消Sentinel控制台懒加载
+
+  main:
+    allow-bean-definition-overriding: true
+
+
+gateway:
+  whitelist:
+    - /v3/api-docs
+
+
