@@ -23,7 +23,7 @@ spring:
             - Path=/example/**
           filters:
             - SwaggerHeaderFilter
-#            - StripPrefix=1
+    #            - StripPrefix=1
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848

@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>example-provider</module>
+        <module>exampleone-provider</module>
     </modules>
 
     <dependencies>
@@ -20,5 +21,23 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <!--seata start-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo</artifactId>
+            <version>4.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.javakaffee</groupId>
+            <artifactId>kryo-serializers</artifactId>
+            <version>0.44</version>
+        </dependency>
+        <!--seata end-->
     </dependencies>
 </project>

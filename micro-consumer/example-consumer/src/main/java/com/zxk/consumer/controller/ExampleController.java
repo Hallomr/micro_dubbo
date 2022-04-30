@@ -7,6 +7,7 @@ import com.zxk.example.service.ExampleService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.rpc.RpcContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpRequest;
@@ -41,9 +42,17 @@ public class ExampleController {
     @GetMapping(value = "/dubbo")
     @ApiOperation(value = "测试服务dubbo调用")
     @SentinelResource(value = "dubboApi",blockHandlerClass = CustomerBlockHandler.class,blockHandler = "handlerException",
-        fallbackClass = Fallback.class,fallback = "dubboFallback")
+            fallbackClass = Fallback.class,fallback = "dubboFallback")
     public void dubbo(@RequestParam("dubbo") String dubbo){
         int i = 1/0;//测试fallback熔断降级
         exampleService.exampleApi(dubbo);
+    }
+
+    @GetMapping(value = "/rpcContext")
+    @ApiOperation(value = "公用参数透传")
+    public void rpcContext(){
+        log.info("currentThread:{}",Thread.currentThread().getName());
+        exampleService.exampleRpcContext("dubbo1");
+        exampleService.exampleRpcContext("dubbo2");
     }
 }
