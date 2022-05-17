@@ -22,7 +22,7 @@ public class TimeTask {
     @Autowired
     private RedissonClient redissonClient;
 
-    @Scheduled(cron = "0/1 * * * * ?")
+    @Scheduled(cron = "0 0/5 * * * ?")
     @Async
     public void execute() {
         RLock lock = redissonClient.getLock(redisson_lock);

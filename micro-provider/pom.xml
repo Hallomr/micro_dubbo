@@ -39,5 +39,11 @@
             <version>0.44</version>
         </dependency>
         <!--seata end-->
+
+        <!-- kafka-->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
     </dependencies>
 </project>

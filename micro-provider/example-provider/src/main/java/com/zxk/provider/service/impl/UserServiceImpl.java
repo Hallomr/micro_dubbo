@@ -8,13 +8,11 @@ import com.zxk.example.service.RoleService;
 import com.zxk.example.service.UserService;
 import com.zxk.provider.mapper.UserMapper;
 import io.seata.spring.annotation.GlobalTransactional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -27,6 +25,7 @@ import java.util.List;
  * @since 2022-04-20
  */
 @DubboService
+@Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @DubboReference
@@ -53,6 +52,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         users.add(u1);
         users.add(u2);
         this.getBaseMapper().insertBatchSomeColumn(users);
+    }
+
+    /**
+     *  todo 多数据源@Transactional事物失效
+     *  方案一（使用多数据源插件dynamic-datasource-spring-boot-starter）：
+     *  https://blog.csdn.net/Wu_Shang001/article/details/121182437
+     *  方案二（自定义事物切面）：
+     *  https://blog.csdn.net/qq_42346678/article/details/123372054
+     * */
+    @Override
+    @DataSource(DataSourceEnum.DB1)
+    //@Transactional(rollbackFor = Exception.class)
+    public void batchInsert(List<User> users) {
+        long t1,t2;
+        t1 = System.currentTimeMillis();
+        this.getBaseMapper().insertBatchSomeColumn(users);
+        t2 = System.currentTimeMillis();
+        log.info("批量入库耗时：{}",t2-t1);
     }
 
     @Override
