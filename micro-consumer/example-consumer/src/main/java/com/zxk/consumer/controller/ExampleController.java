@@ -4,17 +4,15 @@ import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.zxk.consumer.fallback.Fallback;
 import com.zxk.consumer.handler.CustomerBlockHandler;
 import com.zxk.example.service.ExampleService;
+import com.zxk.file.service.FileStore;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.apache.dubbo.rpc.RpcContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.http.HttpRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,6 +26,9 @@ public class ExampleController {
 
     @DubboReference
     private ExampleService exampleService;
+
+    @Autowired
+    private FileStore fileStore;
 
     @GetMapping(value = "/config")
     @ApiOperation(value = "读取nacos配置文件信息")
@@ -54,5 +55,15 @@ public class ExampleController {
         log.info("currentThread:{}",Thread.currentThread().getName());
         exampleService.exampleRpcContext("dubbo1");
         exampleService.exampleRpcContext("dubbo2");
+    }
+
+    @PostMapping("/upload")
+    @ApiOperation(value = "oss文件存储")
+    public void upload(@RequestParam("file") MultipartFile file, String bucket) {
+        try {
+            fileStore.uploadFile(file,bucket);
+        } catch (Exception e) {
+            log.info("upload fail:{}",e.getMessage());
+        }
     }
 }

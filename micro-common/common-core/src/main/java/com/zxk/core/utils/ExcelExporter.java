@@ -11,9 +11,9 @@ import org.apache.poi.xssf.streaming.SXSSFRow;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 @Slf4j
@@ -232,6 +232,29 @@ public class ExcelExporter {
             log.error(" exportExcel error", e);
         } finally {
             IOUtils.closeQuietly(outputStream);
+        }
+    }
+
+    public static void main(String[] args) {
+        test();
+    }
+
+    private static void test() {
+        ExcelExporter hssfWorkExcel = new ExcelExporter(new String[] { "姓名", "年龄" }, "人员基本信息");
+        List<Map<String, Object>> datas = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Map data = new HashMap<>();
+            data.put("name", "test" + i);
+            data.put("age", "age" + i);
+            datas.add(data);
+        }
+        hssfWorkExcel.createTableRows(datas, new String[] { "name", "age" });
+        hssfWorkExcel.mergeCell(1, 2, 0, 1);
+
+        try {
+            hssfWorkExcel.exportExcel(new FileOutputStream(new File("C:\\Users\\zeng\\Desktop\\alibaba\\test.xls")));
+        } catch (FileNotFoundException e) {
+            log.info(e.getMessage());
         }
     }
 

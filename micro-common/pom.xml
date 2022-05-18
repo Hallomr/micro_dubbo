@@ -17,6 +17,7 @@
         <module>common-i18n</module>
         <module>common-core</module>
         <module>common-database</module>
+        <module>common-file</module>
     </modules>
 
     <dependencies>
