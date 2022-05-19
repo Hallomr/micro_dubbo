@@ -47,10 +47,5 @@
             <artifactId>hutool-all</artifactId>
             <version>5.7.20</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-        </dependency>
     </dependencies>
 </project>
