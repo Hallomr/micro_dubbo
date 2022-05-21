@@ -78,4 +78,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         this.batchInsert();
         roleService.insertRole();
     }
+
+    @Override
+    public boolean save(List<Object> list) {
+        //导入数据入库
+        log.info("--------导入数据入库----------");
+        return true;
+    }
 }

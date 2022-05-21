@@ -1,14 +1,17 @@
 package com.zxk.consumer.controller;
 
+import com.alibaba.excel.EasyExcel;
+import com.zxk.core.dto.UserDto;
 import com.zxk.core.model.User;
+import com.zxk.core.utils.UploadDataListener;
 import com.zxk.example.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * <p>
@@ -41,5 +44,12 @@ public class UserController {
     @ApiOperation(value = "seata分布式事务 at模式测试")
     public void seataTransaction(){
         userService.seataTransactionTest();
+    }
+
+    @PostMapping("upload")
+    @ResponseBody
+    public String upload(MultipartFile file) throws IOException {
+        EasyExcel.read(file.getInputStream(), UserDto.class, new UploadDataListener(userService)).sheet().doRead();
+        return "success";
     }
 }

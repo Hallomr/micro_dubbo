@@ -22,4 +22,6 @@ public interface UserService extends IService<User> {
     void batchInsert(List<User> users);
 
     void seataTransactionTest();
+
+    boolean save(List<Object> list);
 }
