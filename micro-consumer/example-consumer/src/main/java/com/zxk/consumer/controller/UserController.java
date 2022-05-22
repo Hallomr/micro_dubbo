@@ -2,8 +2,10 @@ package com.zxk.consumer.controller;
 
 import com.alibaba.excel.EasyExcel;
 import com.zxk.core.dto.UserDto;
+import com.zxk.core.model.Permission;
 import com.zxk.core.model.User;
 import com.zxk.core.utils.UploadDataListener;
+import com.zxk.example.service.PermissionService;
 import com.zxk.example.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * <p>
@@ -27,6 +30,9 @@ import java.io.IOException;
 public class UserController {
     @DubboReference
     private UserService userService;
+
+    @DubboReference
+    private PermissionService permissionService;
 
     @GetMapping(value = "/userInfo/{id}")
     public void userInfo(@PathVariable(value = "id")Integer id){
@@ -51,5 +57,10 @@ public class UserController {
     public String upload(MultipartFile file) throws IOException {
         EasyExcel.read(file.getInputStream(), UserDto.class, new UploadDataListener(userService)).sheet().doRead();
         return "success";
+    }
+
+    @RequestMapping("/permission")
+    public List<Permission> user(Integer id) {
+        return permissionService.findByUserId(id);
     }
 }

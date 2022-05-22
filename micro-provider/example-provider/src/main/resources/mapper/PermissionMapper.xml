@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zxk.provider.mapper.PermissionMapper">
+    <select id="findByUserId" resultType="com.zxk.core.model.Permission">
+        select p.* from sys_user as u left join sys_role_user as ru on
+        u.id = ru.Sys_User_id LEFT JOIN sys_permission_role as pr on
+        ru.Sys_Role_id = pr.role_id LEFT JOIN sys_permission p on
+        pr.permission_id = p.id where u.id = #{id}
+    </select>
+</mapper>
